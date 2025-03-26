@@ -1,6 +1,6 @@
 public class Subtask extends Task{
 
-    private Epic parentEpic;
+    private final Epic parentEpic;
 
     public Subtask(TaskStatus status, String description, String name , Epic parentEpic) {
         super(status, description, name);
