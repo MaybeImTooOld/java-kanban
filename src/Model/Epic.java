@@ -1,3 +1,5 @@
+package Model;
+
 import java.util.ArrayList;
 
 public class Epic extends Task {
@@ -36,11 +38,11 @@ public class Epic extends Task {
         int count = 0;
         for (Subtask subtask : subtasks) {
             switch (subtask.getStatus()) {
-                case IN_PROGRESS: {
+                case TaskStatus.IN_PROGRESS: {
                     setStatus(TaskStatus.IN_PROGRESS);
                     return;
                 }
-                case DONE: {
+                case TaskStatus.DONE: {
                     count++;
                     break;
                 }

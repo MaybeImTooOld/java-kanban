@@ -1,3 +1,10 @@
+package Manager;
+
+import Model.Epic;
+import Model.Subtask;
+import Model.Task;
+import Model.TaskStatus;
+
 import java.util.HashMap;
 
 public class TaskManager {
@@ -19,8 +26,8 @@ public class TaskManager {
     }
 
     public void addNewTask (Task task) {
-        id++;
         if (task != null) {
+            id++;
             task.setId(id);
             tasks.put(id,task);
             System.out.println("Задача добавлена под номером " + id);
@@ -30,8 +37,8 @@ public class TaskManager {
     }
 
     public void addNewEpic (Epic epic) {
-        id++;
         if (epic != null) {
+            id++;
             epic.setId(id);
             epics.put(id,epic);
             System.out.println("Задача добавлена под номером " + id);
@@ -41,8 +48,8 @@ public class TaskManager {
     }
 
     public void addNewSubtask (Subtask subtask) {
-        id++;
         if (subtask != null) {
+            id++;
             subtask.setId(id);
             subtasks.put(id,subtask);
             System.out.println("Задача добавлена под номером " + id);
@@ -51,7 +58,7 @@ public class TaskManager {
         }
     }
 
-    public void updateTask (Task task,TaskStatus taskStatus) {
+    public void updateTask (Task task, TaskStatus taskStatus) {
         if (task != null) {
             task.setStatus(taskStatus);
             tasks.put(task.getId(), task);
