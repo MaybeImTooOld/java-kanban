@@ -8,11 +8,11 @@ import java.util.List;
 public class InMemoryHistoryManager implements HistoryManager {
 
     private List<Task> history = new ArrayList<>();
-    private static final int historySize = 10;
+    private static final int HISTORY_SIZE = 10;
 
     @Override
     public void add(Task task) {
-        if (history.size() >= historySize ) {
+        if (history.size() >= HISTORY_SIZE) {
             history.removeFirst();
         }
         history.add(task);
