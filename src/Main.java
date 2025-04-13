@@ -1,4 +1,6 @@
 import Manager.InMemoryTaskManager;
+import Manager.Interfaces.TaskManager;
+import Manager.Managers;
 import Model.Epic;
 import Model.Subtask;
 import Model.Task;
@@ -8,7 +10,7 @@ public class Main {
 
     public static void main(String[] args) {
         System.out.println("Поехали!");
-        InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager();
+        TaskManager inMemoryTaskManager = Managers.getDefault();
         Task task1 = new Task(TaskStatus.NEW, "Тестируем таски1", "Таск1");
         Task task2 = new Task(TaskStatus.NEW, "Тестируем таски2", "Таск2");
         inMemoryTaskManager.addNewTask(task1);

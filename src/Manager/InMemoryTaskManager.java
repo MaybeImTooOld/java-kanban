@@ -1,11 +1,12 @@
 package Manager;
 
+import Manager.Interfaces.HistoryManager;
+import Manager.Interfaces.TaskManager;
 import Model.Epic;
 import Model.Subtask;
 import Model.Task;
 import Model.TaskStatus;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -14,7 +15,7 @@ public class InMemoryTaskManager implements TaskManager {
     private HashMap<Integer,Task> tasks = new HashMap<>();
     private HashMap<Integer,Epic> epics = new HashMap<>();
     private HashMap<Integer,Subtask> subtasks = new HashMap<>();
-    private List<Task> history = new ArrayList<>();
+    private HistoryManager historyManager = Managers.getDefaultHistory();
 
     @Override
     public HashMap<Integer, Task> getTasks() {
@@ -100,7 +101,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Epic getEpic(int id) {
         if (epics.containsKey(id)){
-            addToHistory(epics.get(id));
+            historyManager.add(epics.get(id));
             return epics.get(id);
         } else {
             return null;
@@ -110,7 +111,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Task getTask(int id) {
         if (tasks.containsKey(id)){
-            addToHistory(tasks.get(id));
+            historyManager.add(tasks.get(id));
             return tasks.get(id);
         } else {
             return null;
@@ -120,24 +121,16 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Subtask getSubtask(int id) {
         if (subtasks.containsKey(id)){
-            addToHistory(subtasks.get(id));
+            historyManager.add(subtasks.get(id));
             return subtasks.get(id);
         } else {
             return null;
         }
     }
 
-
-    @Override
     public List<Task> getHistory() {
-        return history;
+        return historyManager.getHistory();
     }
 
-    public void addToHistory(Task task) {
-        if (history.size() > 10 ) {
-            history.removeFirst();
-        }
-        history.add(task);
-    }
 
 }

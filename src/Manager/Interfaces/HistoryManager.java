@@ -1,4 +1,4 @@
-package Manager;
+package Manager.Interfaces;
 
 import Model.Task;
 
