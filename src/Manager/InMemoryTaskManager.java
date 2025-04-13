@@ -9,26 +9,27 @@ import Model.TaskStatus;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
     private int id = 0;
-    private HashMap<Integer,Task> tasks = new HashMap<>();
-    private HashMap<Integer,Epic> epics = new HashMap<>();
-    private HashMap<Integer,Subtask> subtasks = new HashMap<>();
+    private Map<Integer,Task> tasks = new HashMap<>();
+    private Map<Integer,Epic> epics = new HashMap<>();
+    private Map<Integer,Subtask> subtasks = new HashMap<>();
     private HistoryManager historyManager = Managers.getDefaultHistory();
 
     @Override
-    public HashMap<Integer, Task> getTasks() {
+    public Map<Integer, Task> getTasks() {
         return tasks;
     }
 
     @Override
-    public HashMap<Integer, Epic> getEpics() {
+    public Map<Integer, Epic> getEpics() {
         return epics;
     }
 
     @Override
-    public HashMap<Integer, Subtask> getSubtasks() {
+    public Map<Integer, Subtask> getSubtasks() {
         return subtasks;
     }
 
