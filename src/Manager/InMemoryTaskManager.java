@@ -13,9 +13,9 @@ import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
     private int id = 0;
-    private Map<Integer,Task> tasks = new HashMap<>();
-    private Map<Integer,Epic> epics = new HashMap<>();
-    private Map<Integer,Subtask> subtasks = new HashMap<>();
+    private Map<Integer, Task> tasks = new HashMap<>();
+    private Map<Integer, Epic> epics = new HashMap<>();
+    private Map<Integer, Subtask> subtasks = new HashMap<>();
     private HistoryManager historyManager = Managers.getDefaultHistory();
 
     @Override
@@ -38,7 +38,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (task != null) {
             id++;
             task.setId(id);
-            tasks.put(id,task);
+            tasks.put(id, task);
             System.out.println("Задача добавлена под номером " + id);
         } else {
             System.out.println("Ошибка: задача не может быть null");
@@ -50,7 +50,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (epic != null) {
             id++;
             epic.setId(id);
-            epics.put(id,epic);
+            epics.put(id, epic);
             System.out.println("Задача добавлена под номером " + id);
         } else {
             System.out.println("Ошибка: задача не может быть null");
@@ -62,7 +62,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (subtask != null) {
             id++;
             subtask.setId(id);
-            subtasks.put(id,subtask);
+            subtasks.put(id, subtask);
             System.out.println("Задача добавлена под номером " + id);
         } else {
             System.out.println("Ошибка: задача не может быть null");
@@ -102,7 +102,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Epic getEpic(int id) {
-        if (epics.containsKey(id)){
+        if (epics.containsKey(id)) {
             historyManager.add(epics.get(id));
             return epics.get(id);
         } else {
@@ -112,7 +112,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task getTask(int id) {
-        if (tasks.containsKey(id)){
+        if (tasks.containsKey(id)) {
             historyManager.add(tasks.get(id));
             return tasks.get(id);
         } else {
@@ -122,7 +122,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Subtask getSubtask(int id) {
-        if (subtasks.containsKey(id)){
+        if (subtasks.containsKey(id)) {
             historyManager.add(subtasks.get(id));
             return subtasks.get(id);
         } else {

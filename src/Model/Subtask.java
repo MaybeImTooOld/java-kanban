@@ -1,10 +1,10 @@
 package Model;
 
-public class Subtask extends Task{
+public class Subtask extends Task {
 
     private final Epic parentEpic;
 
-    public Subtask(TaskStatus status, String description, String name , Epic parentEpic) {
+    public Subtask(TaskStatus status, String description, String name, Epic parentEpic) {
         super(status, description, name);
         this.parentEpic = parentEpic;
     }
