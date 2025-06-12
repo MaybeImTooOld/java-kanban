@@ -39,5 +39,6 @@ public class Main {
         System.out.println(inMemoryTaskManager.getTasks());
         System.out.println(inMemoryTaskManager.getEpics());
         System.out.println(inMemoryTaskManager.getSubtasks());
+        System.out.println(inMemoryTaskManager.getHistory());
     }
 }
