@@ -31,11 +31,11 @@ public class InMemoryHistoryManager implements HistoryManager {
         List<Task> historyTasks = new ArrayList<>();
         Node currentNode = head;
         while (true) {
-            historyTasks.add(currentNode.task);
-            currentNode = currentNode.next;
             if (currentNode == null) {
                 break;
             }
+            historyTasks.add(currentNode.task);
+            currentNode = currentNode.next;
         }
         return historyTasks;
     }
