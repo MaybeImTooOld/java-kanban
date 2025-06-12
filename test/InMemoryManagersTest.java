@@ -15,12 +15,12 @@ class InMemoryManagersTest {
     TaskManager taskManager;
 
     @BeforeEach
-    public void CreateTaskManager() {
+    public void createTaskManager() {
         taskManager = Managers.getDefault();
     }
 
     @Test
-    public void TaskManagerShouldAddNewTasksAndFindItById() {
+    public void taskManagerShouldAddNewTasksAndFindItById() {
         Task task = new Task(TaskStatus.NEW, "description", "name");
         Epic epic = new Epic(TaskStatus.NEW, "description", "name");
         Subtask subtask = new Subtask(TaskStatus.NEW, "description", "name", epic);
@@ -34,7 +34,7 @@ class InMemoryManagersTest {
     }
 
     @Test
-    public void TasksWithGeneratedIdAndGivenIdShouldNotConflict() {
+    public void tasksWithGeneratedIdAndGivenIdShouldNotConflict() {
         Task task1 = new Task(TaskStatus.NEW, "description", "name");
         taskManager.addNewTask(task1);
         Task task2 = new Task(TaskStatus.DONE, "Other description", "other name");
@@ -44,7 +44,7 @@ class InMemoryManagersTest {
     }
 
     @Test
-    public void TaskShouldNotChangeAfterAdding() {
+    public void taskShouldNotChangeAfterAdding() {
         Task task = new Task(TaskStatus.NEW, "description", "name");
         taskManager.addNewTask(task);
         Task taskCloneAfterAdding = taskManager.getTask(1);
@@ -54,7 +54,7 @@ class InMemoryManagersTest {
     }
 
     @Test
-    public void HistoryManagerShouldSavePreviousVersionOfTask() {
+    public void historyManagerShouldSavePreviousVersionOfTask() {
         Task task = new Task(TaskStatus.NEW, "description", "name");
         taskManager.addNewTask(task);
         taskManager.getTask(1);

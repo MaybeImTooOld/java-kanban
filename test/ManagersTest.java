@@ -10,7 +10,7 @@ import java.util.HashMap;
 class ManagersTest {
 
     @Test
-    public void AllManagersShouldBeCreatedInitialized() {
+    public void allManagersShouldBeCreatedInitialized() {
         TaskManager taskManager = Managers.getDefault();
         Assertions.assertEquals(new HashMap<>(), taskManager.getTasks());
         HistoryManager historyManager = Managers.getDefaultHistory();

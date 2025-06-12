@@ -3,17 +3,17 @@ import manager.Managers;
 import model.Task;
 import model.TaskStatus;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 public class InMemoryHistoryManagerTest {
 
-    static TaskManager taskManager;
+    TaskManager taskManager;
 
-    @BeforeAll
-    public static void CreateTaskManager() {
+    @BeforeEach
+    public void createTaskManager() {
         taskManager = Managers.getDefault();
         Task task1 = new Task(TaskStatus.NEW, "description", "name");
         Task task2 = new Task(TaskStatus.DONE, "Other description", "other name");
@@ -26,7 +26,7 @@ public class InMemoryHistoryManagerTest {
     }
 
     @Test
-    public void OldIdsShouldNotBeKeptInManager() {
+    public void oldIdsShouldNotBeKeptInManager() {
         taskManager.getTask(1);
         taskManager.getTask(4);
         taskManager.getTask(3);

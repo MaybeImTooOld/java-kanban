@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 class EqualsByIdTest {
 
     @Test
-    public void TasksWithSameIdShouldBeEqual() {
+    public void tasksWithSameIdShouldBeEqual() {
         Task task1 = new Task(TaskStatus.NEW, "description", "name");
         Task task2 = new Task(TaskStatus.DONE, "Other description", "other name");
         task1.setId(1);
@@ -17,7 +17,7 @@ class EqualsByIdTest {
     }
 
     @Test
-    public void EpicsWithSameIdShouldBeEqual() {
+    public void epicsWithSameIdShouldBeEqual() {
         Epic epic1 = new Epic(TaskStatus.NEW, "description", "name");
         Epic epic2 = new Epic(TaskStatus.DONE, "Other description", "other name");
         epic1.setId(1);
@@ -26,7 +26,7 @@ class EqualsByIdTest {
     }
 
     @Test
-    public void SubtasksWithSameIdShouldBeEqual() {
+    public void subtasksWithSameIdShouldBeEqual() {
         Epic epic = new Epic(TaskStatus.NEW, "Parent", "Parent");
         Subtask subtask1 = new Subtask(TaskStatus.NEW, "description", "name", epic);
         Subtask subtask2 = new Subtask(TaskStatus.DONE, "Other description", "other name", epic);
