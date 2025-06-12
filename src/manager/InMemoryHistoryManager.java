@@ -1,7 +1,7 @@
-package Manager;
+package manager;
 
-import Manager.Interfaces.HistoryManager;
-import Model.Task;
+import manager.interfaces.HistoryManager;
+import model.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;

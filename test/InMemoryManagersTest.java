@@ -1,9 +1,9 @@
-import Manager.Interfaces.TaskManager;
-import Manager.Managers;
-import Model.Epic;
-import Model.Subtask;
-import Model.Task;
-import Model.TaskStatus;
+import manager.interfaces.TaskManager;
+import manager.Managers;
+import model.Epic;
+import model.Subtask;
+import model.Task;
+import model.TaskStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

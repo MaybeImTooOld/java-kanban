@@ -1,7 +1,7 @@
-import Manager.Interfaces.TaskManager;
-import Manager.Managers;
-import Model.Task;
-import Model.TaskStatus;
+import manager.interfaces.TaskManager;
+import manager.Managers;
+import model.Task;
+import model.TaskStatus;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

@@ -1,6 +1,6 @@
-import Manager.Interfaces.HistoryManager;
-import Manager.Interfaces.TaskManager;
-import Manager.Managers;
+import manager.interfaces.HistoryManager;
+import manager.interfaces.TaskManager;
+import manager.Managers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

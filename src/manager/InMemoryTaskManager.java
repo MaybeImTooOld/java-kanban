@@ -1,11 +1,11 @@
-package Manager;
+package manager;
 
-import Manager.Interfaces.HistoryManager;
-import Manager.Interfaces.TaskManager;
-import Model.Epic;
-import Model.Subtask;
-import Model.Task;
-import Model.TaskStatus;
+import manager.interfaces.HistoryManager;
+import manager.interfaces.TaskManager;
+import model.Epic;
+import model.Subtask;
+import model.Task;
+import model.TaskStatus;
 
 import java.util.HashMap;
 import java.util.List;
