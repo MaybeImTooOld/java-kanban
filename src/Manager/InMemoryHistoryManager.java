@@ -22,4 +22,9 @@ public class InMemoryHistoryManager implements HistoryManager {
     public List<Task> getHistory() {
         return history;
     }
+
+    @Override
+    public void remove(int id) {
+        history.remove(id);
+    }
 }
