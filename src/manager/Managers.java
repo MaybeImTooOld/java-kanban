@@ -1,7 +1,7 @@
-package Manager;
+package manager;
 
-import Manager.Interfaces.HistoryManager;
-import Manager.Interfaces.TaskManager;
+import manager.interfaces.HistoryManager;
+import manager.interfaces.TaskManager;
 
 public class Managers {
 

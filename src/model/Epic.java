@@ -1,4 +1,4 @@
-package Model;
+package model;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,7 +22,7 @@ public class Epic extends Task {
         }
     }
 
-    public void updateSubtask (Subtask subtaskNew) {
+    public void updateSubtask(Subtask subtaskNew) {
         subtasks.remove(subtaskNew);
         subtasks.add(subtaskNew);
         checkStatus();
@@ -35,7 +35,7 @@ public class Epic extends Task {
         }
     }
 
-    public void checkStatus () {
+    public void checkStatus() {
         int count = 0;
         for (Subtask subtask : subtasks) {
             switch (subtask.getStatus()) {

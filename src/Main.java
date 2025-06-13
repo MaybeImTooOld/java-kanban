@@ -1,10 +1,9 @@
-import Manager.InMemoryTaskManager;
-import Manager.Interfaces.TaskManager;
-import Manager.Managers;
-import Model.Epic;
-import Model.Subtask;
-import Model.Task;
-import Model.TaskStatus;
+import manager.interfaces.TaskManager;
+import manager.Managers;
+import model.Epic;
+import model.Subtask;
+import model.Task;
+import model.TaskStatus;
 
 public class Main {
 
@@ -17,27 +16,28 @@ public class Main {
         inMemoryTaskManager.addNewTask(task2);
         Epic epic1 = new Epic(TaskStatus.NEW, "Тестируем эпики1", "Эпик1");
         inMemoryTaskManager.addNewEpic(epic1);
-        Subtask subtask1 = new Subtask(TaskStatus.NEW,"Тестируем сабтаски1","сабтаск1",epic1);
+        Subtask subtask1 = new Subtask(TaskStatus.NEW, "Тестируем сабтаски1", "сабтаск1", epic1);
         inMemoryTaskManager.addNewSubtask(subtask1);
-        Subtask subtask2 = new Subtask(TaskStatus.NEW,"Тестируем сабтаски2","сабтаск2",epic1);
+        Subtask subtask2 = new Subtask(TaskStatus.NEW, "Тестируем сабтаски2", "сабтаск2", epic1);
         inMemoryTaskManager.addNewSubtask(subtask2);
         epic1.addSubtask(subtask1);
         epic1.addSubtask(subtask2);
         Epic epic2 = new Epic(TaskStatus.NEW, "Тестируем эпики2", "Эпик2");
         inMemoryTaskManager.addNewEpic(epic2);
-        Subtask subtask3 = new Subtask(TaskStatus.NEW,"Тестируем сабтаски3","сабтаск3",epic2);
+        Subtask subtask3 = new Subtask(TaskStatus.NEW, "Тестируем сабтаски3", "сабтаск3", epic2);
         epic2.addSubtask(subtask3);
         inMemoryTaskManager.addNewSubtask(subtask3);
         System.out.println(inMemoryTaskManager.getTasks());
         System.out.println(inMemoryTaskManager.getEpics());
         System.out.println(inMemoryTaskManager.getSubtasks());
-        inMemoryTaskManager.updateTask(task1,TaskStatus.IN_PROGRESS);
-        inMemoryTaskManager.updateTask(task2,TaskStatus.DONE);
-        inMemoryTaskManager.updateSubtask(subtask1,TaskStatus.IN_PROGRESS);
-        inMemoryTaskManager.updateSubtask(subtask2,TaskStatus.DONE);
-        inMemoryTaskManager.updateSubtask(subtask3,TaskStatus.IN_PROGRESS);
+        inMemoryTaskManager.updateTask(task1, TaskStatus.IN_PROGRESS);
+        inMemoryTaskManager.updateTask(task2, TaskStatus.DONE);
+        inMemoryTaskManager.updateSubtask(subtask1, TaskStatus.IN_PROGRESS);
+        inMemoryTaskManager.updateSubtask(subtask2, TaskStatus.DONE);
+        inMemoryTaskManager.updateSubtask(subtask3, TaskStatus.IN_PROGRESS);
         System.out.println(inMemoryTaskManager.getTasks());
         System.out.println(inMemoryTaskManager.getEpics());
         System.out.println(inMemoryTaskManager.getSubtasks());
+        System.out.println(inMemoryTaskManager.getHistory());
     }
 }
