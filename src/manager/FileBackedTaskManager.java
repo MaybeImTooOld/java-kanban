@@ -1,5 +1,6 @@
 package manager;
 
+import manager.exceptions.ManagerLoadException;
 import manager.exceptions.ManagerSaveException;
 import model.*;
 
@@ -90,7 +91,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ManagerLoadException("Ошибка чтения файла " + e.getMessage());
         }
         return fb;
     }
