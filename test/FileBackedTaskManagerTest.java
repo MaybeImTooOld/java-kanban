@@ -13,13 +13,9 @@ public class FileBackedTaskManagerTest {
     File file;
 
     @BeforeEach
-    void fileBackedTaskManagerCreation() {
-        try {
-            file = File.createTempFile("Test", ".csv");
-            fb = new FileBackedTaskManager(file);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    void fileBackedTaskManagerCreation() throws IOException {
+        file = File.createTempFile("Test", ".csv");
+        fb = new FileBackedTaskManager(file);
     }
 
     @AfterEach

@@ -1,5 +1,6 @@
 package manager;
 
+import manager.exceptions.ManagerSaveException;
 import model.*;
 
 import java.io.*;
@@ -60,7 +61,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 fw.write(task.toString() + "\n");
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ManagerSaveException("Ошибка чтения файла!" + e.getMessage());
         }
     }
 
@@ -84,10 +85,12 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     case SUBTASK:
                         fb.addNewSubtask((Subtask) task);
                         break;
+                    default:
+                        System.out.println("Тип " + task.getType() + " не поддерживается.");
                 }
             }
         } catch (IOException e) {
-            System.out.println("Ошибка чтения файла:" + e.getMessage());
+            throw new RuntimeException(e);
         }
         return fb;
     }

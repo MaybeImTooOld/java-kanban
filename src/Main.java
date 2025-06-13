@@ -59,7 +59,7 @@ public class Main {
         inMemoryTaskManager.deleteById(5);
         inMemoryTaskManager.deleteById(6);
         inMemoryTaskManager.deleteById(7);
-        inMemoryTaskManager = FileBackedTaskManager.loadFromFile(new File("/Users/yee/almost everything/test.csv"));
+        inMemoryTaskManager = FileBackedTaskManager.loadFromFile(file);
         System.out.println(inMemoryTaskManager.getTasks());
         System.out.println(inMemoryTaskManager.getEpics());
         System.out.println(inMemoryTaskManager.getSubtasks());
