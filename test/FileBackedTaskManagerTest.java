@@ -15,7 +15,7 @@ public class FileBackedTaskManagerTest {
     @BeforeEach
     void fileBackedTaskManagerCreation() {
         try {
-            file = File.createTempFile("Test", ".csv", new File("/Users/yee/almost everything"));
+            file = File.createTempFile("Test", ".csv");
             fb = new FileBackedTaskManager(file);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -24,7 +24,7 @@ public class FileBackedTaskManagerTest {
 
     @AfterEach
     void deletingTemp() {
-        file.delete();
+        file.deleteOnExit();
     }
 
 

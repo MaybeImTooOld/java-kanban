@@ -6,12 +6,20 @@ import model.Task;
 import model.TaskStatus;
 
 import java.io.File;
+import java.io.IOException;
 
 public class Main {
 
     public static void main(String[] args) {
         System.out.println("Поехали!");
-        TaskManager inMemoryTaskManager = new FileBackedTaskManager(new File("/Users/yee/almost everything/test.csv"));
+        TaskManager inMemoryTaskManager;
+        File file;
+        try {
+            file = File.createTempFile("Test", ".csv");
+            inMemoryTaskManager = new FileBackedTaskManager(file);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         Task task1 = new Task(TaskStatus.NEW, "Тестируем таски1", "Таск1");
         Task task2 = new Task(TaskStatus.NEW, "Тестируем таски2", "Таск2");
         inMemoryTaskManager.addNewTask(task1);
@@ -59,5 +67,6 @@ public class Main {
         System.out.println(task1.getType());
         System.out.println(epic1.getType());
         System.out.println(subtask1.getType());
+        file.deleteOnExit();
     }
 }
