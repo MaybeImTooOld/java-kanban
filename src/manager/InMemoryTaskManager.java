@@ -36,8 +36,12 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void addNewTask(Task task) {
         if (task != null) {
-            id++;
-            task.setId(id);
+            if (task.getId() > id) {
+                id = task.getId();
+            } else {
+                id++;
+                task.setId(id);
+            }
             tasks.put(id, task);
             System.out.println("Задача добавлена под номером " + id);
         } else {
@@ -48,8 +52,12 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void addNewEpic(Epic epic) {
         if (epic != null) {
-            id++;
-            epic.setId(id);
+            if (epic.getId() > id) {
+                id = epic.getId();
+            } else {
+                id++;
+                epic.setId(id);
+            }
             epics.put(id, epic);
             System.out.println("Задача добавлена под номером " + id);
         } else {
@@ -60,8 +68,12 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void addNewSubtask(Subtask subtask) {
         if (subtask != null) {
-            id++;
-            subtask.setId(id);
+            if (subtask.getId() > id) {
+                id = subtask.getId();
+            } else {
+                id++;
+                subtask.setId(id);
+            }
             subtasks.put(id, subtask);
             System.out.println("Задача добавлена под номером " + id);
         } else {
@@ -109,6 +121,7 @@ public class InMemoryTaskManager implements TaskManager {
             return null;
         }
     }
+
 
     @Override
     public Task getTask(int id) {

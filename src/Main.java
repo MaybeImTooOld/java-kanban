@@ -1,15 +1,17 @@
+import manager.FileBackedTaskManager;
 import manager.interfaces.TaskManager;
-import manager.Managers;
 import model.Epic;
 import model.Subtask;
 import model.Task;
 import model.TaskStatus;
 
+import java.io.File;
+
 public class Main {
 
     public static void main(String[] args) {
         System.out.println("Поехали!");
-        TaskManager inMemoryTaskManager = Managers.getDefault();
+        TaskManager inMemoryTaskManager = new FileBackedTaskManager(new File("/Users/yee/almost everything/test.csv"));
         Task task1 = new Task(TaskStatus.NEW, "Тестируем таски1", "Таск1");
         Task task2 = new Task(TaskStatus.NEW, "Тестируем таски2", "Таск2");
         inMemoryTaskManager.addNewTask(task1);
@@ -39,5 +41,23 @@ public class Main {
         System.out.println(inMemoryTaskManager.getEpics());
         System.out.println(inMemoryTaskManager.getSubtasks());
         System.out.println(inMemoryTaskManager.getHistory());
+        System.out.println(task1.getType());
+        System.out.println(epic1.getType());
+        System.out.println(subtask1.getType());
+        inMemoryTaskManager.deleteById(1);
+        inMemoryTaskManager.deleteById(2);
+        inMemoryTaskManager.deleteById(3);
+        inMemoryTaskManager.deleteById(4);
+        inMemoryTaskManager.deleteById(5);
+        inMemoryTaskManager.deleteById(6);
+        inMemoryTaskManager.deleteById(7);
+        inMemoryTaskManager = FileBackedTaskManager.loadFromFile(new File("/Users/yee/almost everything/test.csv"));
+        System.out.println(inMemoryTaskManager.getTasks());
+        System.out.println(inMemoryTaskManager.getEpics());
+        System.out.println(inMemoryTaskManager.getSubtasks());
+        System.out.println(inMemoryTaskManager.getHistory());
+        System.out.println(task1.getType());
+        System.out.println(epic1.getType());
+        System.out.println(subtask1.getType());
     }
 }

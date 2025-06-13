@@ -53,4 +53,9 @@ public class Epic extends Task {
             setStatus(TaskStatus.DONE);
         }
     }
+
+    @Override
+    public TaskTypes getType() {
+        return TaskTypes.EPIC;
+    }
 }
