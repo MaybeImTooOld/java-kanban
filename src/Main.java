@@ -1,15 +1,25 @@
+import manager.FileBackedTaskManager;
 import manager.interfaces.TaskManager;
-import manager.Managers;
 import model.Epic;
 import model.Subtask;
 import model.Task;
 import model.TaskStatus;
 
+import java.io.File;
+import java.io.IOException;
+
 public class Main {
 
     public static void main(String[] args) {
         System.out.println("Поехали!");
-        TaskManager inMemoryTaskManager = Managers.getDefault();
+        TaskManager inMemoryTaskManager;
+        File file;
+        try {
+            file = File.createTempFile("Test", ".csv");
+            inMemoryTaskManager = new FileBackedTaskManager(file);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         Task task1 = new Task(TaskStatus.NEW, "Тестируем таски1", "Таск1");
         Task task2 = new Task(TaskStatus.NEW, "Тестируем таски2", "Таск2");
         inMemoryTaskManager.addNewTask(task1);
@@ -39,5 +49,24 @@ public class Main {
         System.out.println(inMemoryTaskManager.getEpics());
         System.out.println(inMemoryTaskManager.getSubtasks());
         System.out.println(inMemoryTaskManager.getHistory());
+        System.out.println(task1.getType());
+        System.out.println(epic1.getType());
+        System.out.println(subtask1.getType());
+        inMemoryTaskManager.deleteById(1);
+        inMemoryTaskManager.deleteById(2);
+        inMemoryTaskManager.deleteById(3);
+        inMemoryTaskManager.deleteById(4);
+        inMemoryTaskManager.deleteById(5);
+        inMemoryTaskManager.deleteById(6);
+        inMemoryTaskManager.deleteById(7);
+        inMemoryTaskManager = FileBackedTaskManager.loadFromFile(file);
+        System.out.println(inMemoryTaskManager.getTasks());
+        System.out.println(inMemoryTaskManager.getEpics());
+        System.out.println(inMemoryTaskManager.getSubtasks());
+        System.out.println(inMemoryTaskManager.getHistory());
+        System.out.println(task1.getType());
+        System.out.println(epic1.getType());
+        System.out.println(subtask1.getType());
+        file.deleteOnExit();
     }
 }

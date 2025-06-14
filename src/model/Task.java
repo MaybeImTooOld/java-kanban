@@ -2,7 +2,7 @@ package model;
 
 import java.util.Objects;
 
-public class Task {
+public class Task implements Comparable<Task> {
     private String name;
     private String description;
     private int id;
@@ -57,13 +57,21 @@ public class Task {
         this.description = description;
     }
 
+    public TaskTypes getType() {
+        return TaskTypes.TASK;
+    }
+
     @Override
     public String toString() {
-        return "Model.Task{" +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", id=" + id +
-                ", status=" + status +
-                '}';
+        return String.format("%d,%s,%s,%s,%s", id, getType().name(), name, status, description);
+    }
+
+
+    @Override
+    public int compareTo(Task o) {
+        if (!(o instanceof Task task)) {
+            return -1;
+        }
+        return getId() - task.getId();
     }
 }
