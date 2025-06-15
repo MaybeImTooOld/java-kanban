@@ -42,7 +42,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 }
             }
         } catch (IOException e) {
-            System.out.println("Ошибка чтения файла " + e.getMessage());
+            throw new ManagerSaveException("Ошибка чтения файла " + e.getMessage());
         }
         return fb;
     }
