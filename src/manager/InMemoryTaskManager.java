@@ -1,5 +1,6 @@
 package manager;
 
+import manager.exceptions.TaskOverlapException;
 import manager.interfaces.HistoryManager;
 import manager.interfaces.TaskManager;
 import model.Epic;
@@ -7,16 +8,18 @@ import model.Subtask;
 import model.Task;
 import model.TaskStatus;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
+    private final Map<Integer, Task> tasks = new HashMap<>();
+    private final Map<Integer, Epic> epics = new HashMap<>();
+    private final Map<Integer, Subtask> subtasks = new HashMap<>();
+    private final HistoryManager historyManager = Managers.getDefaultHistory();
+    private final TreeSet<Task> prioritizedTasks = new TreeSet<>(
+            Comparator.comparing(Task::getStartTime));
     private int id = 0;
-    private Map<Integer, Task> tasks = new HashMap<>();
-    private Map<Integer, Epic> epics = new HashMap<>();
-    private Map<Integer, Subtask> subtasks = new HashMap<>();
-    private HistoryManager historyManager = Managers.getDefaultHistory();
 
     @Override
     public Map<Integer, Task> getTasks() {
@@ -36,14 +39,16 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void addNewTask(Task task) {
         if (task != null) {
-            if (task.getId() > id) {
-                id = task.getId();
+            if (isTaskOverlappingAnyExisting(task)) {
+                setTaskId(task);
+                tasks.put(id, task);
+                if (task.getStartTime() != null) {
+                    prioritizedTasks.add(task);
+                }
+                System.out.println("Задача добавлена под номером " + id);
             } else {
-                id++;
-                task.setId(id);
+                throw new TaskOverlapException("Ошибка:пересечение времени выполнения задач.");
             }
-            tasks.put(id, task);
-            System.out.println("Задача добавлена под номером " + id);
         } else {
             System.out.println("Ошибка: задача не может быть null");
         }
@@ -52,14 +57,16 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void addNewEpic(Epic epic) {
         if (epic != null) {
-            if (epic.getId() > id) {
-                id = epic.getId();
+            if (isTaskOverlappingAnyExisting(epic)) {
+                setTaskId(epic);
+                epics.put(id, epic);
+                if (epic.getStartTime() != null) {
+                    prioritizedTasks.add(epic);
+                }
+                System.out.println("Задача добавлена под номером " + id);
             } else {
-                id++;
-                epic.setId(id);
+                throw new TaskOverlapException("Ошибка:пересечение времени выполнения задач.");
             }
-            epics.put(id, epic);
-            System.out.println("Задача добавлена под номером " + id);
         } else {
             System.out.println("Ошибка: задача не может быть null");
         }
@@ -68,14 +75,16 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void addNewSubtask(Subtask subtask) {
         if (subtask != null) {
-            if (subtask.getId() > id) {
-                id = subtask.getId();
+            if (isTaskOverlappingAnyExisting(subtask)) {
+                setTaskId(subtask);
+                subtasks.put(id, subtask);
+                if (subtask.getStartTime() != null) {
+                    prioritizedTasks.add(subtask);
+                }
+                System.out.println("Задача добавлена под номером " + id);
             } else {
-                id++;
-                subtask.setId(id);
+                throw new TaskOverlapException("Ошибка:пересечение времени выполнения задач.");
             }
-            subtasks.put(id, subtask);
-            System.out.println("Задача добавлена под номером " + id);
         } else {
             System.out.println("Ошибка: задача не может быть null");
         }
@@ -84,9 +93,13 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void updateTask(Task task, TaskStatus taskStatus) {
         if (task != null) {
-            task.setStatus(taskStatus);
-            tasks.put(task.getId(), task);
-            System.out.println("Задача успешно обновлена");
+            if (isTaskOverlappingAnyExisting(task)) {
+                task.setStatus(taskStatus);
+                tasks.put(task.getId(), task);
+                System.out.println("Задача успешно обновлена");
+            } else {
+                throw new TaskOverlapException("Ошибка:пересечение времени выполнения задач.");
+            }
         } else {
             System.out.println("Ошибка: задача не может быть null");
         }
@@ -95,10 +108,14 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void updateSubtask(Subtask subtask, TaskStatus taskStatus) {
         if (subtask != null) {
-            subtask.setStatus(taskStatus);
-            subtasks.put(subtask.getId(), subtask);
-            subtask.getParentEpic().updateSubtask(subtask);
-            System.out.println("Задача успешно обновлена");
+            if (isTaskOverlappingAnyExisting(subtask)) {
+                subtask.setStatus(taskStatus);
+                subtasks.put(subtask.getId(), subtask);
+                subtask.getParentEpic().updateSubtask(subtask);
+                System.out.println("Задача успешно обновлена");
+            } else {
+                throw new TaskOverlapException("Ошибка:пересечение времени выполнения задач.");
+            }
         } else {
             System.out.println("Ошибка: задача не может быть null");
         }
@@ -145,6 +162,40 @@ public class InMemoryTaskManager implements TaskManager {
 
     public List<Task> getHistory() {
         return historyManager.getHistory();
+    }
+
+    @Override
+    public TreeSet<Task> getPrioritizedTasks() {
+        return prioritizedTasks;
+    }
+
+    public boolean isTasksOverlap(Task task1, Task task2) {
+        if (task1.getStartTime() == null || task2.getStartTime() == null) {
+            return false;
+        }
+
+        LocalDateTime start1 = task1.getStartTime();
+        LocalDateTime end1 = start1.plus(Duration.ofMinutes(task1.getDuration()));
+        LocalDateTime start2 = task2.getStartTime();
+        LocalDateTime end2 = start2.plus(Duration.ofMinutes(task2.getDuration()));
+
+        return start1.isBefore(end2) && start2.isBefore(end1);
+    }
+
+    @Override
+    public boolean isTaskOverlappingAnyExisting(Task newTask) {
+        return getPrioritizedTasks().stream()
+                .filter(task -> task.getId() != newTask.getId())
+                .noneMatch(existingTask -> isTasksOverlap(existingTask, newTask));
+    }
+
+    public void setTaskId(Task task) {
+        if (task.getId() > id) {
+            id = task.getId();
+        } else {
+            id++;
+            task.setId(id);
+        }
     }
 
 

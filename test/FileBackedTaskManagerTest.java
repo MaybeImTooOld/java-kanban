@@ -1,46 +1,42 @@
 import manager.FileBackedTaskManager;
-import model.Epic;
-import model.Subtask;
 import model.Task;
 import model.TaskStatus;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 
-public class FileBackedTaskManagerTest {
-    FileBackedTaskManager fb;
-    File file;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-    @BeforeEach
-    void fileBackedTaskManagerCreation() throws IOException {
-        file = File.createTempFile("Test", ".csv");
-        fb = new FileBackedTaskManager(file);
+class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
+    private File tempFile;
+
+    @Override
+    protected FileBackedTaskManager createTaskManager() {
+        try {
+            tempFile = File.createTempFile("tasks", ".csv");
+            return new FileBackedTaskManager(tempFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    void shouldSaveAndLoadFromFile() {
+        Task task = new Task(TaskStatus.NEW, "Task", "Desc", 30, LocalDateTime.now());
+        taskManager.addNewTask(task);
+        int taskId = task.getId();
+
+        FileBackedTaskManager loaded = FileBackedTaskManager.loadFromFile(tempFile);
+        assertEquals(task, loaded.getTask(taskId));
     }
 
     @AfterEach
-    void deletingTemp() {
-        file.deleteOnExit();
-    }
-
-
-    @Test
-    void savingAndReadingEmptyFileTest() {
-        fb.save();
-        fb = FileBackedTaskManager.loadFromFile(file);
-    }
-
-    @Test
-    public void savingAndReadingFromFileTest() {
-        Task task = new Task(TaskStatus.NEW, "description", "name");
-        Epic epic = new Epic(TaskStatus.NEW, "description", "name");
-        Subtask subtask = new Subtask(TaskStatus.NEW, "description", "name", epic);
-        epic.addSubtask(subtask);
-        fb.addNewTask(task);
-        fb.addNewEpic(epic);
-        fb.addNewSubtask(subtask);
-        FileBackedTaskManager fbFromFile = FileBackedTaskManager.loadFromFile(file);
-        Assertions.assertEquals(fb.getTasks(), fbFromFile.getTasks());
-        Assertions.assertEquals(fb.getSubtasks(), fbFromFile.getSubtasks());
+    void tearDown() {
+        if (tempFile != null && tempFile.exists()) {
+            tempFile.deleteOnExit();
+        }
     }
 }

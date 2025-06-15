@@ -7,6 +7,7 @@ import model.TaskStatus;
 
 import java.util.List;
 import java.util.Map;
+import java.util.TreeSet;
 
 public interface TaskManager {
     Map<Integer, Task> getTasks();
@@ -34,4 +35,8 @@ public interface TaskManager {
     Subtask getSubtask(int id);
 
     List<Task> getHistory();
+
+    boolean isTaskOverlappingAnyExisting(Task newTask);
+
+    TreeSet<Task> getPrioritizedTasks();
 }
