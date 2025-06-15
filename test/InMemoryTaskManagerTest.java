@@ -1,4 +1,5 @@
 import manager.InMemoryTaskManager;
+import manager.exceptions.TaskOverlapException;
 import model.Epic;
 import model.Subtask;
 import model.Task;
@@ -18,7 +19,7 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
     }
 
     @Test
-    void shouldDeleteTasksById() {
+    void shouldDeleteTasksById() throws TaskOverlapException {
         Task task1 = new Task(TaskStatus.NEW, "Task 1", "Desc", 30, LocalDateTime.now());
         Task task2 = new Task(TaskStatus.NEW, "Task 2", "Desc", 45, LocalDateTime.now().plusHours(1));
 
@@ -31,7 +32,7 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
     }
 
     @Test
-    void shouldUpdateTaskStatus() {
+    void shouldUpdateTaskStatus() throws TaskOverlapException {
         Task task = new Task(TaskStatus.NEW, "Task", "Desc", 30, null);
         taskManager.addNewTask(task);
         int taskId = task.getId();
@@ -42,7 +43,7 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
     }
 
     @Test
-    public void taskManagerShouldAddNewTasksAndFindItById() {
+    public void taskManagerShouldAddNewTasksAndFindItById() throws TaskOverlapException {
         Task task = new Task(TaskStatus.NEW, "Task 1", "Desc", 30, LocalDateTime.now());
         Epic epic = new Epic(TaskStatus.NEW, "Task 2", "Desc", 45, LocalDateTime.now().plusHours(1));
         Subtask subtask = new Subtask(TaskStatus.NEW, "Task 2", "Desc", 45, LocalDateTime.now().plusDays(3), epic);
@@ -56,7 +57,7 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
     }
 
     @Test
-    public void tasksWithGeneratedIdAndGivenIdShouldNotConflict() {
+    public void tasksWithGeneratedIdAndGivenIdShouldNotConflict() throws TaskOverlapException {
         Task task1 = new Task(TaskStatus.NEW, "Task 1", "Desc", 30, LocalDateTime.now());
         taskManager.addNewTask(task1);
         Task task2 = new Task(TaskStatus.NEW, "Task 2", "Desc", 45, LocalDateTime.now().plusHours(1));
@@ -66,7 +67,7 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
     }
 
     @Test
-    public void taskShouldNotChangeAfterAdding() {
+    public void taskShouldNotChangeAfterAdding() throws TaskOverlapException {
         Task task = new Task(TaskStatus.NEW, "Task 1", "Desc", 30, LocalDateTime.now());
         taskManager.addNewTask(task);
         Task taskCloneAfterAdding = taskManager.getTask(1);
@@ -76,7 +77,7 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
     }
 
     @Test
-    public void historyManagerShouldSavePreviousVersionOfTask() {
+    public void historyManagerShouldSavePreviousVersionOfTask() throws TaskOverlapException {
         Task task = new Task(TaskStatus.NEW, "Task 1", "Desc", 30, LocalDateTime.now());
         taskManager.addNewTask(task);
         taskManager.getTask(1);

@@ -1,4 +1,5 @@
 import manager.FileBackedTaskManager;
+import manager.exceptions.TaskOverlapException;
 import model.Task;
 import model.TaskStatus;
 import org.junit.jupiter.api.AfterEach;
@@ -24,7 +25,7 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
     }
 
     @Test
-    void shouldSaveAndLoadFromFile() {
+    void shouldSaveAndLoadFromFile() throws TaskOverlapException {
         Task task = new Task(TaskStatus.NEW, "Task", "Desc", 30, LocalDateTime.now());
         taskManager.addNewTask(task);
         int taskId = task.getId();

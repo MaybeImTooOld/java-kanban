@@ -37,7 +37,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void addNewTask(Task task) {
+    public void addNewTask(Task task) throws TaskOverlapException {
         if (task != null) {
             if (isTaskOverlappingAnyExisting(task)) {
                 setTaskId(task);
@@ -55,7 +55,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void addNewEpic(Epic epic) {
+    public void addNewEpic(Epic epic) throws TaskOverlapException {
         if (epic != null) {
             if (isTaskOverlappingAnyExisting(epic)) {
                 setTaskId(epic);
@@ -73,7 +73,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void addNewSubtask(Subtask subtask) {
+    public void addNewSubtask(Subtask subtask) throws TaskOverlapException {
         if (subtask != null) {
             if (isTaskOverlappingAnyExisting(subtask)) {
                 setTaskId(subtask);
@@ -91,7 +91,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateTask(Task task, TaskStatus taskStatus) {
+    public void updateTask(Task task, TaskStatus taskStatus) throws TaskOverlapException {
         if (task != null) {
             if (isTaskOverlappingAnyExisting(task)) {
                 task.setStatus(taskStatus);
@@ -106,7 +106,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateSubtask(Subtask subtask, TaskStatus taskStatus) {
+    public void updateSubtask(Subtask subtask, TaskStatus taskStatus) throws TaskOverlapException {
         if (subtask != null) {
             if (isTaskOverlappingAnyExisting(subtask)) {
                 subtask.setStatus(taskStatus);
@@ -165,7 +165,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public TreeSet<Task> getPrioritizedTasks() {
+    public Set<Task> getPrioritizedTasks() {
         return prioritizedTasks;
     }
 

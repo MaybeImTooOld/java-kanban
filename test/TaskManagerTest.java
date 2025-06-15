@@ -23,7 +23,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
 
     @Test
-    void shouldCreateTask() {
+    void shouldCreateTask() throws TaskOverlapException {
         Task task = new Task(TaskStatus.NEW, "Task 1", "Description", 30, LocalDateTime.now());
         taskManager.addNewTask(task);
         final int taskId = task.getId();
@@ -35,7 +35,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void shouldNotAllowTaskTimeOverlap() {
+    void shouldNotAllowTaskTimeOverlap() throws TaskOverlapException {
         Task task1 = new Task(TaskStatus.NEW, "Task 1", "Description", 30, LocalDateTime.now());
         Task task2 = new Task(TaskStatus.NEW, "Task 2", "Description", 60, LocalDateTime.now().minusMinutes(40));
 

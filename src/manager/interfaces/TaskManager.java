@@ -1,5 +1,6 @@
 package manager.interfaces;
 
+import manager.exceptions.TaskOverlapException;
 import model.Epic;
 import model.Subtask;
 import model.Task;
@@ -7,7 +8,7 @@ import model.TaskStatus;
 
 import java.util.List;
 import java.util.Map;
-import java.util.TreeSet;
+import java.util.Set;
 
 public interface TaskManager {
     Map<Integer, Task> getTasks();
@@ -16,15 +17,15 @@ public interface TaskManager {
 
     Map<Integer, Subtask> getSubtasks();
 
-    void addNewTask(Task task);
+    void addNewTask(Task task) throws TaskOverlapException;
 
-    void addNewEpic(Epic epic);
+    void addNewEpic(Epic epic) throws TaskOverlapException;
 
-    void addNewSubtask(Subtask subtask);
+    void addNewSubtask(Subtask subtask) throws TaskOverlapException;
 
-    void updateTask(Task task, TaskStatus taskStatus);
+    void updateTask(Task task, TaskStatus taskStatus) throws TaskOverlapException;
 
-    void updateSubtask(Subtask subtask, TaskStatus taskStatus);
+    void updateSubtask(Subtask subtask, TaskStatus taskStatus) throws TaskOverlapException;
 
     void deleteById(int id);
 
@@ -38,5 +39,5 @@ public interface TaskManager {
 
     boolean isTaskOverlappingAnyExisting(Task newTask);
 
-    TreeSet<Task> getPrioritizedTasks();
+    Set<Task> getPrioritizedTasks();
 }

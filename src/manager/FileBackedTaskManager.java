@@ -1,7 +1,7 @@
 package manager;
 
-import manager.exceptions.ManagerLoadException;
 import manager.exceptions.ManagerSaveException;
+import manager.exceptions.TaskOverlapException;
 import model.*;
 
 import java.io.*;
@@ -42,37 +42,37 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 }
             }
         } catch (IOException e) {
-            throw new ManagerLoadException("Ошибка чтения файла " + e.getMessage());
+            System.out.println("Ошибка чтения файла " + e.getMessage());
         }
         return fb;
     }
 
     @Override
-    public void addNewTask(Task task) {
+    public void addNewTask(Task task) throws TaskOverlapException {
         super.addNewTask(task);
         save();
     }
 
     @Override
-    public void addNewEpic(Epic epic) {
+    public void addNewEpic(Epic epic) throws TaskOverlapException {
         super.addNewEpic(epic);
         save();
     }
 
     @Override
-    public void addNewSubtask(Subtask subtask) {
+    public void addNewSubtask(Subtask subtask) throws TaskOverlapException {
         super.addNewSubtask(subtask);
         save();
     }
 
     @Override
-    public void updateTask(Task task, TaskStatus taskStatus) {
+    public void updateTask(Task task, TaskStatus taskStatus) throws TaskOverlapException {
         super.updateTask(task, taskStatus);
         save();
     }
 
     @Override
-    public void updateSubtask(Subtask subtask, TaskStatus taskStatus) {
+    public void updateSubtask(Subtask subtask, TaskStatus taskStatus) throws TaskOverlapException {
         super.updateSubtask(subtask, taskStatus);
         save();
     }

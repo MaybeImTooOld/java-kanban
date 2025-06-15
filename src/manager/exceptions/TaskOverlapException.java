@@ -1,6 +1,8 @@
 package manager.exceptions;
 
-public class TaskOverlapException extends RuntimeException {
+import java.io.IOException;
+
+public class TaskOverlapException extends IOException {
     public TaskOverlapException(String message) {
         super(message);
     }

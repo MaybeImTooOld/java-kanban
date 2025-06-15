@@ -1,4 +1,5 @@
 import manager.Managers;
+import manager.exceptions.TaskOverlapException;
 import manager.interfaces.TaskManager;
 import model.Task;
 import model.TaskStatus;
@@ -14,7 +15,7 @@ public class InMemoryHistoryManagerTest {
     TaskManager taskManager;
 
     @BeforeEach
-    public void createTaskManager() {
+    public void createTaskManager() throws TaskOverlapException {
         taskManager = Managers.getDefault();
         Task task1 = new Task(TaskStatus.NEW, "Task 1", "Desc", 30, LocalDateTime.now());
         Task task2 = new Task(TaskStatus.NEW, "Task 2", "Desc", 45, LocalDateTime.now().plusHours(1));
