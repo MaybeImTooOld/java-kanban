@@ -1,17 +1,29 @@
 package model;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class Task implements Comparable<Task> {
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm dd.MM.yy");
     private String name;
     private String description;
     private int id;
     private TaskStatus status;
+    private Duration duration;
+    private LocalDateTime startTime;
 
-    public Task(TaskStatus status, String description, String name) {
+    public Task(TaskStatus status, String name, String description, int duration, LocalDateTime startTime) {
         this.status = status;
         this.description = description;
         this.name = name;
+        this.duration = Duration.ofMinutes(duration);
+        this.startTime = startTime;
+    }
+
+    public static DateTimeFormatter getFormat() {
+        return DATE_TIME_FORMATTER;
     }
 
     @Override
@@ -61,9 +73,35 @@ public class Task implements Comparable<Task> {
         return TaskTypes.TASK;
     }
 
+    public int getDuration() {
+        return (int) duration.toMinutes();
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getStartTimeFormatted() {
+        return startTime.format(DATE_TIME_FORMATTER);
+    }
+
+    public LocalDateTime getEndTime() {
+        return startTime.plusMinutes(duration.toMinutes());
+    }
+
     @Override
     public String toString() {
-        return String.format("%d,%s,%s,%s,%s", id, getType().name(), name, status, description);
+        return String.format("%d,%s,%s,%s,%s,%d,%s,%s", id, getType().name(), name,
+                status, description, getDuration(), getStartTimeFormatted(),
+                getEndTime().format(DATE_TIME_FORMATTER));
     }
 
 

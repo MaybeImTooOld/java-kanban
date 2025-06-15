@@ -1,13 +1,15 @@
 package model;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 
 public class Epic extends Task {
     Collection<Subtask> subtasks = new ArrayList<>();
 
-    public Epic(TaskStatus status, String description, String name) {
-        super(status, description, name);
+    public Epic(TaskStatus status, String description, String name, int duration, LocalDateTime startTime) {
+
+        super(status, description, name, duration, startTime);
     }
 
     public Collection<Subtask> getSubtasks() {
@@ -36,21 +38,21 @@ public class Epic extends Task {
     }
 
     public void checkStatus() {
-        int count = 0;
-        for (Subtask subtask : subtasks) {
-            switch (subtask.getStatus()) {
-                case TaskStatus.IN_PROGRESS: {
-                    setStatus(TaskStatus.IN_PROGRESS);
-                    return;
-                }
-                case TaskStatus.DONE: {
-                    count++;
-                    break;
-                }
+        boolean hasInProgress = subtasks.stream()
+                .map(Subtask::getStatus)
+                .anyMatch(TaskStatus.IN_PROGRESS::equals);
+
+        if (hasInProgress) {
+            setStatus(TaskStatus.IN_PROGRESS);
+        } else {
+            long doneCount = subtasks.stream()
+                    .map(Subtask::getStatus)
+                    .filter(TaskStatus.DONE::equals)
+                    .count();
+
+            if (doneCount == subtasks.size()) {
+                setStatus(TaskStatus.DONE);
             }
-        }
-        if (count == subtasks.size()) {
-            setStatus(TaskStatus.DONE);
         }
     }
 
