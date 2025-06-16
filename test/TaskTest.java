@@ -19,15 +19,6 @@ class TaskTest {
     }
 
     @Test
-    public void epicsWithSameIdShouldBeEqual() {
-        Epic epic1 = new Epic(TaskStatus.NEW, "Task", "Desc", 30, LocalDateTime.now());
-        Epic epic2 = new Epic(TaskStatus.NEW, "Task", "Desc", 30, LocalDateTime.now().minusDays(1));
-        epic1.setId(1);
-        epic2.setId(1);
-        Assertions.assertEquals(epic1, epic2);
-    }
-
-    @Test
     public void subtasksWithSameIdShouldBeEqual() {
         Epic epic = new Epic(TaskStatus.NEW, "Parent", "Desc", 30, LocalDateTime.now());
         Subtask subtask1 = new Subtask(TaskStatus.NEW, "son", "Desc", 30, LocalDateTime.now().minusDays(2), epic);

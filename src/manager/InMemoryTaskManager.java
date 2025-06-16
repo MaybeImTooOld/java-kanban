@@ -6,7 +6,6 @@ import manager.interfaces.TaskManager;
 import model.Epic;
 import model.Subtask;
 import model.Task;
-import model.TaskStatus;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -91,11 +90,10 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateTask(Task task, TaskStatus taskStatus) throws TaskOverlapException {
+    public void updateTask(Task task, int oldTaskId) throws TaskOverlapException {
         if (task != null) {
             if (isTaskOverlappingAnyExisting(task)) {
-                task.setStatus(taskStatus);
-                tasks.put(task.getId(), task);
+                tasks.put(oldTaskId, task);
                 System.out.println("Задача успешно обновлена");
             } else {
                 throw new TaskOverlapException("Ошибка:пересечение времени выполнения задач.");
@@ -106,11 +104,10 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateSubtask(Subtask subtask, TaskStatus taskStatus) throws TaskOverlapException {
+    public void updateSubtask(Subtask subtask, int oldTaskId) throws TaskOverlapException {
         if (subtask != null) {
             if (isTaskOverlappingAnyExisting(subtask)) {
-                subtask.setStatus(taskStatus);
-                subtasks.put(subtask.getId(), subtask);
+                subtasks.put(oldTaskId, subtask);
                 subtask.getParentEpic().updateSubtask(subtask);
                 System.out.println("Задача успешно обновлена");
             } else {
