@@ -4,12 +4,21 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import manager.Managers;
 import manager.interfaces.TaskManager;
+import model.Epic;
+import model.Subtask;
+import model.Task;
+import model.TaskStatus;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import server.adapters.JavaTimeAdapters;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
@@ -21,10 +30,18 @@ public class PrioritizedOnServerTest {
             .registerTypeAdapter(LocalDateTime.class, new JavaTimeAdapters.LocalDateTimeAdapter())
             .create();
     HttpClient client = HttpClient.newHttpClient();
+    String local = "http://localhost:8080/prioritized";
 
     @BeforeEach
     void setUp() throws IOException {
         taskManager = Managers.getDefault();
+        Task task = new Task(TaskStatus.NEW, "Task 1", "Desc", 30, LocalDateTime.now());
+        Epic epic = new Epic(TaskStatus.NEW, "Task 2", "Desc", 45, LocalDateTime.now().plusHours(1));
+        Subtask subtask = new Subtask(TaskStatus.NEW, "Task 2", "Desc", 45, LocalDateTime.now().plusDays(3), epic);
+        epic.addSubtask(subtask);
+        taskManager.addNewTask(task);
+        taskManager.addNewEpic(epic);
+        taskManager.addNewSubtask(subtask);
         httpTaskServer = new HttpTaskServer(taskManager);
         httpTaskServer.start();
 
@@ -33,5 +50,17 @@ public class PrioritizedOnServerTest {
     @AfterEach
     void closeUp() {
         httpTaskServer.stop(0);
+    }
+
+    @Test
+    void serverShouldGivePrioritized() throws IOException, InterruptedException {
+        String prioritizedToJson = gson.toJson(taskManager.getPrioritizedTasks());
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(local))
+                .GET()
+                .build();
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        Assertions.assertEquals(200, response.statusCode());
+        Assertions.assertEquals(prioritizedToJson, response.body());
     }
 }
