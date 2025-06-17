@@ -29,9 +29,9 @@ public class TasksOnServerTest extends OnServerTestAbstract {
         Task task1 = new Task(TaskStatus.NEW, "Task 1", "Desc", 30, LocalDateTime.now());
         task1.setId(1);
         String taskInJson = Serializator.gsonForTasks.toJson(task1);
-        HttpResponse<String> response = sendPostToServer(local, taskInJson);
-        HttpResponse<String> response1 = sendPostToServer(local + "/1", taskInJson);
-        Assertions.assertEquals(201, response1.statusCode());
+        sendPostToServer(local, taskInJson);
+        HttpResponse<String> response = sendPostToServer(local + "/1", taskInJson);
+        Assertions.assertEquals(201, response.statusCode());
     }
 
     @Test
@@ -39,7 +39,7 @@ public class TasksOnServerTest extends OnServerTestAbstract {
         Task task1 = new Task(TaskStatus.NEW, "Task 1", "Desc", 30, LocalDateTime.now());
         task1.setId(1);
         String taskInJson = Serializator.gsonForTasks.toJson(task1);
-        HttpResponse<String> firstResponse = sendPostToServer(local, taskInJson);
+        sendPostToServer(local, taskInJson);
         Task task2 = new Task(TaskStatus.NEW, "Task 1", "Desc", 30, LocalDateTime.now());
         String overlapTaskJson = Serializator.gsonForTasks.toJson(task2);
         HttpResponse<String> secondResponse = sendPostToServer(local, overlapTaskJson);

@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.net.URI;
 import java.net.http.HttpResponse;
 import java.time.LocalDateTime;
 
@@ -32,7 +31,7 @@ public class EpicsOnServerTest extends OnServerTestAbstract {
         Epic epic = new Epic(TaskStatus.NEW, "Task 1", "Desc", 30, LocalDateTime.now());
         epic.setId(1);
         String epicInJson = Serializator.gsonForTasks.toJson(epic);
-        HttpResponse<String> firstResponse = sendPostToServer(local, epicInJson);
+        sendPostToServer(local, epicInJson);
         Epic epic1 = new Epic(TaskStatus.NEW, "Task 1", "Desc", 30, LocalDateTime.now());
         String overlapEpicJson = Serializator.gsonForTasks.toJson(epic1);
         HttpResponse<String> secondResponse = sendPostToServer(local, overlapEpicJson);
@@ -49,8 +48,6 @@ public class EpicsOnServerTest extends OnServerTestAbstract {
         taskManager.addNewEpic(epic1);
         taskManager.addNewEpic(epic2);
         taskManager.addNewEpic(epic3);
-
-        URI url = URI.create(local);
         HttpResponse<String> response = sendGetToServer(local);
         String epicsToJson = Serializator.gsonForTasks.toJson(taskManager.getEpics());
         Assertions.assertEquals(200, response.statusCode());

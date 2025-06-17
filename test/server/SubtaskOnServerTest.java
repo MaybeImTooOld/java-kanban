@@ -44,7 +44,7 @@ public class SubtaskOnServerTest extends OnServerTestAbstract {
         Subtask subtask = new Subtask(TaskStatus.NEW, "Task 1", "Desc", 30, LocalDateTime.now(), epic);
         subtask.setId(1);
         String subtaskInJson = Serializator.gsonForTasks.toJson(subtask);
-        HttpResponse<String> firstResponse = sendPostToServer(local, subtaskInJson);
+        sendPostToServer(local, subtaskInJson);
         Subtask subtask1 = new Subtask(TaskStatus.NEW, "Task 1", "Desc", 30, LocalDateTime.now(), epic);
         String overlapSubtaskJson = Serializator.gsonForTasks.toJson(subtask1);
         HttpResponse<String> secondResponse = sendPostToServer(local, overlapSubtaskJson);
