@@ -6,6 +6,7 @@ import model.Subtask;
 import model.Task;
 import model.TaskStatus;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +15,11 @@ import java.net.http.HttpResponse;
 import java.time.LocalDateTime;
 
 public class PrioritizedOnServerTest extends OnServerTestAbstract {
-    String local = "http://localhost:8080/prioritized";
+
+    @BeforeAll
+    static void setUrl() {
+        setUrlForClass("prioritized");
+    }
 
     @Override
     @BeforeEach
@@ -29,13 +34,12 @@ public class PrioritizedOnServerTest extends OnServerTestAbstract {
         taskManager.addNewSubtask(subtask);
         httpTaskServer = new HttpTaskServer(taskManager);
         httpTaskServer.start();
-
     }
 
     @Test
     void serverShouldGivePrioritized() throws IOException, InterruptedException {
         String prioritizedToJson = Serializator.gsonForTasks.toJson(taskManager.getPrioritizedTasks());
-        HttpResponse<String> response = sendGetToServer(local);
+        HttpResponse<String> response = sendGetToServer();
         Assertions.assertEquals(200, response.statusCode());
         Assertions.assertEquals(prioritizedToJson, response.body());
     }

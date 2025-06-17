@@ -5,6 +5,7 @@ import model.Epic;
 import model.Subtask;
 import model.TaskStatus;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -14,8 +15,12 @@ import java.time.LocalDateTime;
 
 public class SubtaskOnServerTest extends OnServerTestAbstract {
 
-    String local = "http://localhost:8080/subtasks";
     Epic epic;
+
+    @BeforeAll
+    static void setUrl() {
+        setUrlForClass("subtasks");
+    }
 
     @Override
     @BeforeEach
@@ -24,7 +29,6 @@ public class SubtaskOnServerTest extends OnServerTestAbstract {
         httpTaskServer = new HttpTaskServer(taskManager);
         httpTaskServer.start();
         epic = new Epic(TaskStatus.NEW, "Task 1", "Desc", 30, LocalDateTime.now().minusDays(25));
-
     }
 
     @Test
@@ -32,7 +36,7 @@ public class SubtaskOnServerTest extends OnServerTestAbstract {
         Subtask subtask1 = new Subtask(TaskStatus.NEW, "Task 1", "Desc", 30, LocalDateTime.now(), epic);
         subtask1.setId(1);
         String subtaskInJson = Serializator.gsonForTasks.toJson(subtask1);
-        HttpResponse<String> response = sendPostToServer(local, subtaskInJson);
+        HttpResponse<String> response = sendPostToServer(subtaskInJson);
         Assertions.assertEquals(201, response.statusCode());
         Assertions.assertEquals(subtask1, taskManager.getSubtask(1));
 
@@ -44,10 +48,10 @@ public class SubtaskOnServerTest extends OnServerTestAbstract {
         Subtask subtask = new Subtask(TaskStatus.NEW, "Task 1", "Desc", 30, LocalDateTime.now(), epic);
         subtask.setId(1);
         String subtaskInJson = Serializator.gsonForTasks.toJson(subtask);
-        sendPostToServer(local, subtaskInJson);
+        sendPostToServer(subtaskInJson);
         Subtask subtask1 = new Subtask(TaskStatus.NEW, "Task 1", "Desc", 30, LocalDateTime.now(), epic);
         String overlapSubtaskJson = Serializator.gsonForTasks.toJson(subtask1);
-        HttpResponse<String> secondResponse = sendPostToServer(local, overlapSubtaskJson);
+        HttpResponse<String> secondResponse = sendPostToServer(overlapSubtaskJson);
         Assertions.assertEquals(406, secondResponse.statusCode());
     }
 
@@ -62,25 +66,25 @@ public class SubtaskOnServerTest extends OnServerTestAbstract {
         taskManager.addNewSubtask(subtask2);
         taskManager.addNewSubtask(subtask3);
 
-        HttpResponse<String> response = sendGetToServer(local);
+        HttpResponse<String> response = sendGetToServer();
         String subtasksToJson = Serializator.gsonForTasks.toJson(taskManager.getSubtasks());
         Assertions.assertEquals(200, response.statusCode());
         Assertions.assertEquals(subtasksToJson, response.body());
     }
 
     @Test
-    void serverShouldGiveTSubtaskById() throws IOException, InterruptedException {
+    void serverShouldGiveSubtaskById() throws IOException, InterruptedException {
         Subtask subtask = new Subtask(TaskStatus.NEW, "Task 1", "Desc", 30, LocalDateTime.now(), epic);
         taskManager.addNewSubtask(subtask);
         String subtaskInJson = Serializator.gsonForTasks.toJson(subtask);
-        HttpResponse<String> response = sendGetToServer(local + "/1");
+        HttpResponse<String> response = sendGetToServer(subtask);
         Assertions.assertEquals(200, response.statusCode());
         Assertions.assertEquals(subtaskInJson, response.body());
     }
 
     @Test
     void serverShouldGiveErrorIfTaskWithThisIdIsNotExisting() throws IOException, InterruptedException {
-        HttpResponse<String> response = sendGetToServer(local + "/1");
+        HttpResponse<String> response = sendGetToServer(1);
         Assertions.assertEquals(404, response.statusCode());
     }
 
@@ -88,7 +92,7 @@ public class SubtaskOnServerTest extends OnServerTestAbstract {
     void serverShouldDeleteTaskById() throws IOException, InterruptedException {
         Subtask subtask = new Subtask(TaskStatus.NEW, "Task 1", "Desc", 30, LocalDateTime.now(), epic);
         taskManager.addNewTask(subtask);
-        HttpResponse<String> response = sendDeleteToServer(local + "/1");
+        HttpResponse<String> response = sendDeleteToServer(subtask);
         Assertions.assertEquals(200, response.statusCode());
     }
 }

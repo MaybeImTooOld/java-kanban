@@ -6,6 +6,7 @@ import model.Subtask;
 import model.Task;
 import model.TaskStatus;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +15,11 @@ import java.net.http.HttpResponse;
 import java.time.LocalDateTime;
 
 public class HistoryOnServerTest extends OnServerTestAbstract {
-    String local = "http://localhost:8080/history";
+
+    @BeforeAll
+    static void setUrl() {
+        setUrlForClass("history");
+    }
 
     @Override
     @BeforeEach
@@ -38,7 +43,7 @@ public class HistoryOnServerTest extends OnServerTestAbstract {
     @Test
     void serverShouldGiveHistory() throws IOException, InterruptedException {
         String historyToJson = Serializator.gsonForTasks.toJson(taskManager.getHistory());
-        HttpResponse<String> response = sendGetToServer(local);
+        HttpResponse<String> response = sendGetToServer();
         Assertions.assertEquals(200, response.statusCode());
         Assertions.assertEquals(historyToJson, response.body());
     }

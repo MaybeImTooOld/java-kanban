@@ -3,6 +3,7 @@ package server;
 import model.Task;
 import model.TaskStatus;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -10,15 +11,18 @@ import java.net.http.HttpResponse;
 import java.time.LocalDateTime;
 
 public class TasksOnServerTest extends OnServerTestAbstract {
-    String local = "http://localhost:8080/tasks";
 
+    @BeforeAll
+    static void setUrl() {
+        setUrlForClass("tasks");
+    }
 
     @Test
     void tasksShouldAddsToManagerThroughServerWithoutId() throws IOException, InterruptedException {
         Task task1 = new Task(TaskStatus.NEW, "Task 1", "Desc", 30, LocalDateTime.now());
         task1.setId(1);
         String taskInJson = Serializator.gsonForTasks.toJson(task1);
-        HttpResponse<String> response = sendPostToServer(local, taskInJson);
+        HttpResponse<String> response = sendPostToServer(taskInJson);
         Assertions.assertEquals(201, response.statusCode());
         Assertions.assertEquals(task1, taskManager.getTask(1));
 
@@ -29,8 +33,8 @@ public class TasksOnServerTest extends OnServerTestAbstract {
         Task task1 = new Task(TaskStatus.NEW, "Task 1", "Desc", 30, LocalDateTime.now());
         task1.setId(1);
         String taskInJson = Serializator.gsonForTasks.toJson(task1);
-        sendPostToServer(local, taskInJson);
-        HttpResponse<String> response = sendPostToServer(local + "/1", taskInJson);
+        sendPostToServer(taskInJson);
+        HttpResponse<String> response = sendPostToServer(task1, taskInJson);
         Assertions.assertEquals(201, response.statusCode());
     }
 
@@ -39,10 +43,10 @@ public class TasksOnServerTest extends OnServerTestAbstract {
         Task task1 = new Task(TaskStatus.NEW, "Task 1", "Desc", 30, LocalDateTime.now());
         task1.setId(1);
         String taskInJson = Serializator.gsonForTasks.toJson(task1);
-        sendPostToServer(local, taskInJson);
+        sendPostToServer(taskInJson);
         Task task2 = new Task(TaskStatus.NEW, "Task 1", "Desc", 30, LocalDateTime.now());
         String overlapTaskJson = Serializator.gsonForTasks.toJson(task2);
-        HttpResponse<String> secondResponse = sendPostToServer(local, overlapTaskJson);
+        HttpResponse<String> secondResponse = sendPostToServer(overlapTaskJson);
         Assertions.assertEquals(406, secondResponse.statusCode());
     }
 
@@ -57,7 +61,7 @@ public class TasksOnServerTest extends OnServerTestAbstract {
         taskManager.addNewTask(task3);
         taskManager.addNewTask(task4);
 
-        HttpResponse<String> response = sendGetToServer(local);
+        HttpResponse<String> response = sendGetToServer();
         String tasksToJson = Serializator.gsonForTasks.toJson(taskManager.getTasks());
         Assertions.assertEquals(200, response.statusCode());
         Assertions.assertEquals(tasksToJson, response.body());
@@ -68,14 +72,14 @@ public class TasksOnServerTest extends OnServerTestAbstract {
         Task task1 = new Task(TaskStatus.NEW, "Task 1", "Desc", 30, LocalDateTime.now());
         taskManager.addNewTask(task1);
         String taskInJson = Serializator.gsonForTasks.toJson(task1);
-        HttpResponse<String> response = sendGetToServer(local + "/1");
+        HttpResponse<String> response = sendGetToServer(task1);
         Assertions.assertEquals(200, response.statusCode());
         Assertions.assertEquals(taskInJson, response.body());
     }
 
     @Test
     void serverShouldGiveErrorIfTaskWithThisIdIsNotExisting() throws IOException, InterruptedException {
-        HttpResponse<String> response = sendGetToServer(local + "/1");
+        HttpResponse<String> response = sendGetToServer(1);
         Assertions.assertEquals(404, response.statusCode());
     }
 
@@ -83,7 +87,7 @@ public class TasksOnServerTest extends OnServerTestAbstract {
     void serverShouldDeleteTaskById() throws IOException, InterruptedException {
         Task task1 = new Task(TaskStatus.NEW, "Task 1", "Desc", 30, LocalDateTime.now());
         taskManager.addNewTask(task1);
-        HttpResponse<String> response = sendDeleteToServer(local + "/1");
+        HttpResponse<String> response = sendDeleteToServer(1);
         Assertions.assertEquals(200, response.statusCode());
     }
 }
