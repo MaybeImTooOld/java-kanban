@@ -4,6 +4,7 @@ import com.sun.net.httpserver.HttpExchange;
 import manager.exceptions.TaskOverlapException;
 import manager.interfaces.TaskManager;
 import model.Task;
+import server.Serializator;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -62,7 +63,7 @@ public class TasksHandler extends BaseHttpHandler {
 
     private void methodGetTasks(HttpExchange exchange) throws IOException {
         Map<Integer, Task> tasks = manager.getTasks();
-        String response = gson.toJson(tasks);
+        String response = Serializator.gsonForTasks.toJson(tasks);
         sendResponse(exchange, 200, response);
     }
 
@@ -76,7 +77,7 @@ public class TasksHandler extends BaseHttpHandler {
                 return;
             }
 
-            String response = gson.toJson(task);
+            String response = Serializator.gsonForTasks.toJson(task);
             sendResponse(exchange, 200, response);
         } catch (NumberFormatException e) {
             sendBadRequest(exchange, "Invalid task ID format");
@@ -89,7 +90,7 @@ public class TasksHandler extends BaseHttpHandler {
             try (InputStream is = exchange.getRequestBody()) {
                 body = new String(is.readAllBytes(), StandardCharsets.UTF_8);
             }
-            Task task = gson.fromJson(body, Task.class);
+            Task task = Serializator.gsonForTasks.fromJson(body, Task.class);
             manager.addNewTask(task);
             sendResponse(exchange, 201, "Adding task succeed");
         } catch (TaskOverlapException e) {
@@ -111,7 +112,7 @@ public class TasksHandler extends BaseHttpHandler {
             try (InputStream is = exchange.getRequestBody()) {
                 body = new String(is.readAllBytes(), StandardCharsets.UTF_8);
             }
-            Task task = gson.fromJson(body, Task.class);
+            Task task = Serializator.gsonForTasks.fromJson(body, Task.class);
 
             manager.updateTask(task, id);
             sendResponse(exchange, 201, "Update task succeed");

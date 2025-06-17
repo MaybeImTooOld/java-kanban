@@ -4,6 +4,7 @@ import com.sun.net.httpserver.HttpExchange;
 import manager.exceptions.TaskOverlapException;
 import manager.interfaces.TaskManager;
 import model.Epic;
+import server.Serializator;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -62,7 +63,7 @@ public class EpicsHandler extends BaseHttpHandler {
 
     private void methodGetEpics(HttpExchange exchange) throws IOException {
         Map<Integer, Epic> epics = manager.getEpics();
-        String response = gson.toJson(epics);
+        String response = Serializator.gsonForTasks.toJson(epics);
         sendResponse(exchange, 200, response);
     }
 
@@ -76,7 +77,7 @@ public class EpicsHandler extends BaseHttpHandler {
                 return;
             }
 
-            String response = gson.toJson(epic);
+            String response = Serializator.gsonForTasks.toJson(epic);
             sendResponse(exchange, 200, response);
         } catch (NumberFormatException e) {
             sendBadRequest(exchange, "Invalid epic ID format");
@@ -89,7 +90,7 @@ public class EpicsHandler extends BaseHttpHandler {
             try (InputStream is = exchange.getRequestBody()) {
                 body = new String(is.readAllBytes(), StandardCharsets.UTF_8);
             }
-            Epic epic = gson.fromJson(body, Epic.class);
+            Epic epic = Serializator.gsonForTasks.fromJson(body, Epic.class);
 
             manager.addNewEpic(epic);
             sendResponse(exchange, 201, "Adding epic succeed");
@@ -108,7 +109,7 @@ public class EpicsHandler extends BaseHttpHandler {
                 return;
             }
 
-            String response = gson.toJson(epic.getSubtasks());
+            String response = Serializator.gsonForTasks.toJson(epic.getSubtasks());
             sendResponse(exchange, 200, response);
         } catch (NumberFormatException e) {
             sendBadRequest(exchange, "Invalid epic ID format");

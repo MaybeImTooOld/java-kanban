@@ -4,6 +4,7 @@ import com.sun.net.httpserver.HttpExchange;
 import manager.exceptions.TaskOverlapException;
 import manager.interfaces.TaskManager;
 import model.Subtask;
+import server.Serializator;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -64,7 +65,7 @@ public class SubtasksHandler extends BaseHttpHandler {
 
     private void methodGetSubtasks(HttpExchange exchange) throws IOException {
         Map<Integer, Subtask> subtasks = manager.getSubtasks();
-        String response = gson.toJson(subtasks);
+        String response = Serializator.gsonForTasks.toJson(subtasks);
         sendResponse(exchange, 200, response);
     }
 
@@ -78,7 +79,7 @@ public class SubtasksHandler extends BaseHttpHandler {
                 return;
             }
 
-            String response = gson.toJson(subtask);
+            String response = Serializator.gsonForTasks.toJson(subtask);
             sendResponse(exchange, 200, response);
         } catch (NumberFormatException e) {
             sendBadRequest(exchange, "Invalid subtask ID format");
@@ -91,7 +92,7 @@ public class SubtasksHandler extends BaseHttpHandler {
             try (InputStream is = exchange.getRequestBody()) {
                 body = new String(is.readAllBytes(), StandardCharsets.UTF_8);
             }
-            Subtask subtask = gson.fromJson(body, Subtask.class);
+            Subtask subtask = Serializator.gsonForTasks.fromJson(body, Subtask.class);
 
             manager.addNewSubtask(subtask);
             sendResponse(exchange, 201, "Adding subtask succeed");
@@ -114,7 +115,7 @@ public class SubtasksHandler extends BaseHttpHandler {
             try (InputStream is = exchange.getRequestBody()) {
                 body = new String(is.readAllBytes(), StandardCharsets.UTF_8);
             }
-            Subtask subtask = gson.fromJson(body, Subtask.class);
+            Subtask subtask = Serializator.gsonForTasks.fromJson(body, Subtask.class);
 
             manager.updateSubtask(subtask, id);
             sendResponse(exchange, 201, "Update subtask succeed");

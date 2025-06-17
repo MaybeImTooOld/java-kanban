@@ -1,37 +1,22 @@
 package server;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import manager.Managers;
-import manager.interfaces.TaskManager;
 import model.Epic;
 import model.Subtask;
 import model.Task;
 import model.TaskStatus;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import server.adapters.JavaTimeAdapters;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.time.Duration;
 import java.time.LocalDateTime;
 
-public class PrioritizedOnServerTest {
-    HttpTaskServer httpTaskServer;
-    TaskManager taskManager;
-    Gson gson = new GsonBuilder()
-            .registerTypeAdapter(Duration.class, new JavaTimeAdapters.DurationAdapter())
-            .registerTypeAdapter(LocalDateTime.class, new JavaTimeAdapters.LocalDateTimeAdapter())
-            .create();
-    HttpClient client = HttpClient.newHttpClient();
+public class PrioritizedOnServerTest extends OnServerTestAbstract {
     String local = "http://localhost:8080/prioritized";
 
+    @Override
     @BeforeEach
     void setUp() throws IOException {
         taskManager = Managers.getDefault();
@@ -47,19 +32,10 @@ public class PrioritizedOnServerTest {
 
     }
 
-    @AfterEach
-    void closeUp() {
-        httpTaskServer.stop(0);
-    }
-
     @Test
     void serverShouldGivePrioritized() throws IOException, InterruptedException {
-        String prioritizedToJson = gson.toJson(taskManager.getPrioritizedTasks());
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(local))
-                .GET()
-                .build();
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        String prioritizedToJson = Serializator.gsonForTasks.toJson(taskManager.getPrioritizedTasks());
+        HttpResponse<String> response = sendGetToServer(local);
         Assertions.assertEquals(200, response.statusCode());
         Assertions.assertEquals(prioritizedToJson, response.body());
     }

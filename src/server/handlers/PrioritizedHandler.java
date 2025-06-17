@@ -2,6 +2,7 @@ package server.handlers;
 
 import com.sun.net.httpserver.HttpExchange;
 import manager.interfaces.TaskManager;
+import server.Serializator;
 
 import java.io.IOException;
 import java.net.URI;
@@ -20,7 +21,7 @@ public class PrioritizedHandler extends BaseHttpHandler {
         String path = requestURI.getPath();
 
         if (path.equals("/prioritized") && method.equals("GET")) {
-            String response = gson.toJson(manager.getPrioritizedTasks());
+            String response = Serializator.gsonForTasks.toJson(manager.getPrioritizedTasks());
             sendResponse(exchange, 200, response);
         } else {
             sendNotFound(exchange);
