@@ -4,7 +4,6 @@ import manager.exceptions.TaskOverlapException;
 import model.Epic;
 import model.Subtask;
 import model.Task;
-import model.TaskStatus;
 
 import java.util.List;
 import java.util.Map;
@@ -23,9 +22,9 @@ public interface TaskManager {
 
     void addNewSubtask(Subtask subtask) throws TaskOverlapException;
 
-    void updateTask(Task task, TaskStatus taskStatus) throws TaskOverlapException;
+    void updateTask(Task task, int oldTaskId) throws TaskOverlapException;
 
-    void updateSubtask(Subtask subtask, TaskStatus taskStatus) throws TaskOverlapException;
+    void updateSubtask(Subtask subtask, int oldTaskId) throws TaskOverlapException;
 
     void deleteById(int id);
 

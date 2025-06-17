@@ -36,8 +36,9 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
         Task task = new Task(TaskStatus.NEW, "Task", "Desc", 30, null);
         taskManager.addNewTask(task);
         int taskId = task.getId();
+        task.setStatus(TaskStatus.IN_PROGRESS);
 
-        taskManager.updateTask(task, TaskStatus.IN_PROGRESS);
+        taskManager.updateTask(task, taskId);
 
         assertEquals(TaskStatus.IN_PROGRESS, taskManager.getTask(taskId).getStatus());
     }

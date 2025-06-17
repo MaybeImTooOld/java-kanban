@@ -12,7 +12,6 @@ import static org.junit.jupiter.api.Assertions.*;
 public abstract class TaskManagerTest<T extends TaskManager> {
     protected T taskManager;
 
-    // Абстрактный метод для создания конкретной реализации менеджера
     protected abstract T createTaskManager();
 
     @BeforeEach

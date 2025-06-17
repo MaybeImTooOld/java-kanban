@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class Epic extends Task {
-    Collection<Subtask> subtasks = new ArrayList<>();
+    transient Collection<Subtask> subtasks = new ArrayList<>();
 
     public Epic(TaskStatus status, String description, String name, int duration, LocalDateTime startTime) {
 
@@ -25,7 +25,7 @@ public class Epic extends Task {
     }
 
     public void updateSubtask(Subtask subtaskNew) {
-        subtasks.remove(subtaskNew);
+        removeSubtask(subtaskNew);
         subtasks.add(subtaskNew);
         checkStatus();
     }

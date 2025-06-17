@@ -1,6 +1,7 @@
 import model.Epic;
 import model.Subtask;
 import model.TaskStatus;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -53,6 +54,15 @@ class EpicStatusTest {
 
 
         assertEquals(TaskStatus.IN_PROGRESS, epic.getStatus());
+    }
+
+    @Test
+    public void epicsWithSameIdShouldBeEqual() {
+        Epic epic1 = new Epic(TaskStatus.NEW, "Task", "Desc", 30, LocalDateTime.now());
+        Epic epic2 = new Epic(TaskStatus.NEW, "Task", "Desc", 30, LocalDateTime.now().minusDays(1));
+        epic1.setId(1);
+        epic2.setId(1);
+        Assertions.assertEquals(epic1, epic2);
     }
 
     @Test

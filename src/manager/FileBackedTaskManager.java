@@ -66,14 +66,14 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void updateTask(Task task, TaskStatus taskStatus) throws TaskOverlapException {
-        super.updateTask(task, taskStatus);
+    public void updateTask(Task task, int oldTaskId) throws TaskOverlapException {
+        super.updateTask(task, oldTaskId);
         save();
     }
 
     @Override
-    public void updateSubtask(Subtask subtask, TaskStatus taskStatus) throws TaskOverlapException {
-        super.updateSubtask(subtask, taskStatus);
+    public void updateSubtask(Subtask subtask, int oldTaskId) throws TaskOverlapException {
+        super.updateSubtask(subtask, oldTaskId);
         save();
     }
 
